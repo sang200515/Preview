@@ -11,6 +11,9 @@
 		8E8B6FAC2A5EE71C007FEAC3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8B6FAB2A5EE71C007FEAC3 /* ContentView.swift */; };
 		8E8B6FAE2A5EE71E007FEAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B6FAD2A5EE71E007FEAC3 /* Assets.xcassets */; };
 		8E8B6FB12A5EE71E007FEAC3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E8B6FB02A5EE71E007FEAC3 /* Preview Assets.xcassets */; };
+		8E90C4EF2A8CFAEB007FB02F /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E90C4EE2A8CFAEB007FB02F /* Preview.swift */; };
+		8EE963F22A8A5AF700767F66 /* View+PreviewDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */; };
+		8EE963F42A8A6AAE00767F66 /* Modifies+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +22,9 @@
 		8E8B6FAB2A5EE71C007FEAC3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8E8B6FAD2A5EE71E007FEAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E8B6FB02A5EE71E007FEAC3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8E90C4EE2A8CFAEB007FB02F /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
+		8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PreviewDevice.swift"; sourceTree = "<group>"; };
+		8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modifies+View.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +41,7 @@
 		8E8B6F9D2A5EE71C007FEAC3 = {
 			isa = PBXGroup;
 			children = (
+				8E97D7802A6AD607004DC217 /* someting */,
 				8E8B6FA82A5EE71C007FEAC3 /* SwiftUI_Study */,
 				8E8B6FA72A5EE71C007FEAC3 /* Products */,
 			);
@@ -51,6 +58,7 @@
 		8E8B6FA82A5EE71C007FEAC3 /* SwiftUI_Study */ = {
 			isa = PBXGroup;
 			children = (
+				8EE963F02A8A5AC300767F66 /* PreviewDevices */,
 				8E8B6FA92A5EE71C007FEAC3 /* SwiftUI_StudyApp.swift */,
 				8E8B6FAB2A5EE71C007FEAC3 /* ContentView.swift */,
 				8E8B6FAD2A5EE71E007FEAC3 /* Assets.xcassets */,
@@ -65,6 +73,23 @@
 				8E8B6FB02A5EE71E007FEAC3 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8E97D7802A6AD607004DC217 /* someting */ = {
+			isa = PBXGroup;
+			children = (
+				8E90C4EE2A8CFAEB007FB02F /* Preview.swift */,
+			);
+			path = someting;
+			sourceTree = "<group>";
+		};
+		8EE963F02A8A5AC300767F66 /* PreviewDevices */ = {
+			isa = PBXGroup;
+			children = (
+				8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */,
+				8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */,
+			);
+			path = PreviewDevices;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +108,8 @@
 			dependencies = (
 			);
 			name = SwiftUI_Study;
+			packageProductDependencies = (
+			);
 			productName = SwiftUI_Study;
 			productReference = 8E8B6FA62A5EE71C007FEAC3 /* SwiftUI_Study.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +138,8 @@
 				Base,
 			);
 			mainGroup = 8E8B6F9D2A5EE71C007FEAC3;
+			packageReferences = (
+			);
 			productRefGroup = 8E8B6FA72A5EE71C007FEAC3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -139,6 +168,9 @@
 			files = (
 				8E8B6FAC2A5EE71C007FEAC3 /* ContentView.swift in Sources */,
 				8E8B6FAA2A5EE71C007FEAC3 /* SwiftUI_StudyApp.swift in Sources */,
+				8E90C4EF2A8CFAEB007FB02F /* Preview.swift in Sources */,
+				8EE963F42A8A6AAE00767F66 /* Modifies+View.swift in Sources */,
+				8EE963F22A8A5AF700767F66 /* View+PreviewDevice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,7 +4,6 @@
 //
 //  Created by Sang Truong on 12/07/2023.
 //
-
 import SwiftUI
 
 struct ContentView: View {
@@ -13,14 +12,18 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Text("Hello, world!2")
         }
         .padding()
+        .background(.red)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+
         ContentView()
+            .previewDevicesNecessary()
+
     }
 }
