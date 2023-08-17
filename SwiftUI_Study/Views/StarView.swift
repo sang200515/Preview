@@ -1,22 +1,13 @@
 //
-//  HomeView.swift
+//  StarView.swift
 //  SwiftUI_Study
 //
-//  Created by Sang Truong on 16/08/2023.
+//  Created by Sang Truong on 17/08/2023.
 //
-
-import Foundation
-import SwiftUI
 import SwiftUI
 
-
-
-
-struct ContentView1: View {
-
+struct StarView: View {
     @State var rating:Int = 0
-
-
     private var overlayView: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
@@ -43,31 +34,21 @@ struct ContentView1: View {
             }
         }
     }
-
-
     var body: some View {
 
         CustomPreview {
-
-
             starsView
                 .overlay {overlayView.mask(starsView)}
 
-
-
-
-
         }
-
     }
 }
 
-struct ContentView1_Previews: PreviewProvider {
+struct StarView_Previews: PreviewProvider {
 
     static var previews: some View {
         ContentView()
-            .previewResizable()
-
     }
 }
+
 

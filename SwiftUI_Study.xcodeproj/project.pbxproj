@@ -16,6 +16,13 @@
 		8E90C4F32A8CFE73007FB02F /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E90C4F22A8CFE73007FB02F /* HomeState.swift */; };
 		8E90C4F72A8CFFA6007FB02F /* UIView+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E90C4F62A8CFFA6007FB02F /* UIView+Modifiers.swift */; };
 		8E9184042A8D0A7A00802BDD /* UISscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9184032A8D0A7A00802BDD /* UISscreen.swift */; };
+		8E9DC8392A8E855E00B12EF7 /* StarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC8382A8E855E00B12EF7 /* StarView.swift */; };
+		8E9DC83B2A8E85EE00B12EF7 /* TernaryExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC83A2A8E85EE00B12EF7 /* TernaryExample.swift */; };
+		8E9DC83D2A8E867B00B12EF7 /* AnimationTimingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC83C2A8E867B00B12EF7 /* AnimationTimingExample.swift */; };
+		8E9DC83F2A8E86E500B12EF7 /* TransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC83E2A8E86E500B12EF7 /* TransitionExample.swift */; };
+		8E9DC8412A8E875200B12EF7 /* LongPressGestureExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC8402A8E875200B12EF7 /* LongPressGestureExample.swift */; };
+		8E9DC8432A8E87A000B12EF7 /* BackgroundThreadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC8422A8E87A000B12EF7 /* BackgroundThreadViewModel.swift */; };
+		8E9DC8452A8E882100B12EF7 /* Background_OverlayExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9DC8442A8E882100B12EF7 /* Background_OverlayExample.swift */; };
 		8EE963F22A8A5AF700767F66 /* View+PreviewDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */; };
 		8EE963F42A8A6AAE00767F66 /* Modifies+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +38,13 @@
 		8E90C4F22A8CFE73007FB02F /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		8E90C4F62A8CFFA6007FB02F /* UIView+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Modifiers.swift"; sourceTree = "<group>"; };
 		8E9184032A8D0A7A00802BDD /* UISscreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISscreen.swift; sourceTree = "<group>"; };
+		8E9DC8382A8E855E00B12EF7 /* StarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarView.swift; sourceTree = "<group>"; };
+		8E9DC83A2A8E85EE00B12EF7 /* TernaryExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TernaryExample.swift; sourceTree = "<group>"; };
+		8E9DC83C2A8E867B00B12EF7 /* AnimationTimingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationTimingExample.swift; sourceTree = "<group>"; };
+		8E9DC83E2A8E86E500B12EF7 /* TransitionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionExample.swift; sourceTree = "<group>"; };
+		8E9DC8402A8E875200B12EF7 /* LongPressGestureExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPressGestureExample.swift; sourceTree = "<group>"; };
+		8E9DC8422A8E87A000B12EF7 /* BackgroundThreadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundThreadViewModel.swift; sourceTree = "<group>"; };
+		8E9DC8442A8E882100B12EF7 /* Background_OverlayExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background_OverlayExample.swift; sourceTree = "<group>"; };
 		8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PreviewDevice.swift"; sourceTree = "<group>"; };
 		8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modifies+View.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				8E90C4F52A8CFF98007FB02F /* Extension */,
-				8E97D7802A6AD607004DC217 /* someting */,
 				8E8B6FA82A5EE71C007FEAC3 /* SwiftUI_Study */,
 				8E8B6FA72A5EE71C007FEAC3 /* Products */,
 			);
@@ -67,6 +80,7 @@
 		8E8B6FA82A5EE71C007FEAC3 /* SwiftUI_Study */ = {
 			isa = PBXGroup;
 			children = (
+				8E9DC8372A8E855300B12EF7 /* Views */,
 				8EE963F02A8A5AC300767F66 /* PreviewDevices */,
 				8E8B6FA92A5EE71C007FEAC3 /* SwiftUI_StudyApp.swift */,
 				8E8B6FAB2A5EE71C007FEAC3 /* ContentView.swift */,
@@ -99,16 +113,23 @@
 			children = (
 				8E90C4F62A8CFFA6007FB02F /* UIView+Modifiers.swift */,
 				8E9184032A8D0A7A00802BDD /* UISscreen.swift */,
+				8E90C4EE2A8CFAEB007FB02F /* Preview.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		8E97D7802A6AD607004DC217 /* someting */ = {
+		8E9DC8372A8E855300B12EF7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8E90C4EE2A8CFAEB007FB02F /* Preview.swift */,
+				8E9DC8382A8E855E00B12EF7 /* StarView.swift */,
+				8E9DC83A2A8E85EE00B12EF7 /* TernaryExample.swift */,
+				8E9DC83C2A8E867B00B12EF7 /* AnimationTimingExample.swift */,
+				8E9DC83E2A8E86E500B12EF7 /* TransitionExample.swift */,
+				8E9DC8402A8E875200B12EF7 /* LongPressGestureExample.swift */,
+				8E9DC8422A8E87A000B12EF7 /* BackgroundThreadViewModel.swift */,
+				8E9DC8442A8E882100B12EF7 /* Background_OverlayExample.swift */,
 			);
-			path = someting;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8EE963F02A8A5AC300767F66 /* PreviewDevices */ = {
@@ -195,14 +216,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E90C4F32A8CFE73007FB02F /* HomeState.swift in Sources */,
+				8E9DC8432A8E87A000B12EF7 /* BackgroundThreadViewModel.swift in Sources */,
 				8E8B6FAC2A5EE71C007FEAC3 /* ContentView.swift in Sources */,
+				8E9DC83F2A8E86E500B12EF7 /* TransitionExample.swift in Sources */,
 				8E8B6FAA2A5EE71C007FEAC3 /* SwiftUI_StudyApp.swift in Sources */,
 				8E90C4F12A8CFE66007FB02F /* HomeView.swift in Sources */,
 				8E9184042A8D0A7A00802BDD /* UISscreen.swift in Sources */,
+				8E9DC8452A8E882100B12EF7 /* Background_OverlayExample.swift in Sources */,
 				8E90C4EF2A8CFAEB007FB02F /* Preview.swift in Sources */,
 				8EE963F42A8A6AAE00767F66 /* Modifies+View.swift in Sources */,
 				8EE963F22A8A5AF700767F66 /* View+PreviewDevice.swift in Sources */,
+				8E9DC8412A8E875200B12EF7 /* LongPressGestureExample.swift in Sources */,
+				8E9DC8392A8E855E00B12EF7 /* StarView.swift in Sources */,
 				8E90C4F72A8CFFA6007FB02F /* UIView+Modifiers.swift in Sources */,
+				8E9DC83B2A8E85EE00B12EF7 /* TernaryExample.swift in Sources */,
+				8E9DC83D2A8E867B00B12EF7 /* AnimationTimingExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
