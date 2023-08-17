@@ -78,11 +78,26 @@ extension View {
             .previewDisplayName(device.previewDisplayName)
     }
 
-    func previewDevices(devices: [Device]) -> some View {
-        ForEach(devices, id: \.self) { device in
-            previewDevice(device: device)
+    func previewIpad(device: Device = .iPadPro3rdGen, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
+
+        ForEach(0..<2, id: \.self) { index2 in
+            previewDevice(PreviewDevice(rawValue: device.previewDevice))
+                .previewDisplayName(device.previewDisplayName)
+                .previewInterfaceOrientation(orientations[index2])
         }
+
     }
+
+    func previewIPhone(device: Device = .iPhone13, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
+
+        ForEach(0..<2, id: \.self) { index2 in
+            previewDevice(PreviewDevice(rawValue: device.previewDevice))
+                .previewDisplayName(device.previewDisplayName)
+                .previewInterfaceOrientation(orientations[index2])
+        }
+
+    }
+
     @ViewBuilder
     func previewDevicesNecessary(
         devices: [Device] = [
@@ -106,7 +121,7 @@ extension View {
                     previewDevice(device: device)
                         .previewDisplayName("null+")
                 }else { previewDevice(device: device)
-                    .previewInterfaceOrientation(orientations[index2])
+                        .previewInterfaceOrientation(orientations[index2])
 
                 }
 
@@ -115,48 +130,6 @@ extension View {
         }
     }
 }
-
-@available(iOS 13.0, macOS 11.0, macCatalyst 13.0, tvOS 13.0, watchOS 6.0, *)
-extension View {
-
-    func previewDevice(device: Device, colorScheme: ColorScheme) -> some View {
-        previewDevice(device: device)
-            .preferredColorScheme(colorScheme)
-    }
-
-    func previewDevice(device: Device, colorSchemes: [ColorScheme]) -> some View {
-        ForEach(0..<colorSchemes.count, id: \.self) { index in
-            previewDevice(device: device)
-                .preferredColorScheme(colorSchemes[index])
-        }
-    }
-}
-
-@available(iOS 15.0, OSX 12.00, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
-extension View {
-
-    func previewDevice(device: Device, orientation: InterfaceOrientation) -> some View {
-        previewDevice(device: device)
-            .previewInterfaceOrientation(orientation)
-    }
-
-    func previewDevice(device: Device, orientations: [InterfaceOrientation]) -> some View {
-        ForEach(0..<orientations.count, id: \.self) { index in
-            previewDevice(device: device)
-                .previewInterfaceOrientation(orientations[index])
-        }
-    }
-
-    func previewDevice(device: Device, orientation: InterfaceOrientation, colorSchemes: [ColorScheme]) -> some View {
-        ForEach(0..<colorSchemes.count, id: \.self) { index in
-            previewDevice(device: device)
-                .previewInterfaceOrientation(orientation)
-                .preferredColorScheme(colorSchemes[index])
-        }
-    }
-
-}
-
 import SwiftUI
 
 struct ChildSizeReader<Content: View>: View {
@@ -183,53 +156,330 @@ fileprivate struct SizePreferenceKey: PreferenceKey {
 
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
 }
-//
-//  PreviewResizableViewModifier.swift
-//  PreviewResizable
-//
-//  Created by Joan Duat on 8/11/22.
-//
 
-import SwiftUI
+class ScreenSize: ObservableObject {
+    static let shared = ScreenSize()
 
+    @Published var viewSize: CGSize = UIScreen.main.bounds.size
+
+    func updateSize(_ size: CGSize) {
+        viewSize = size
+    }
+}
 struct PreviewResizableViewModifier: ViewModifier {
-
-    @State private var size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.width)
+    @StateObject static var sizeObserver = ScreenSize.shared
+    @State private var size = CGSize(width: UIScreen.main.bounds.width ,height:  UIScreen.main.bounds.height)
     @State private var isDragging = false
     @State private var contentSize: CGSize = .zero
     @State private var isRunning = false
-
+    @State private var isFitting = false
+    @State private var isPortrait = UIDevice.current.orientation.isPortrait
+    @State private var hiddenToolbar = true
     private let handleSize: CGFloat = 30
     private let minSize: CGSize = .init(width: 30, height: 30)
     private var isContentFitting: Bool {
         size.width >= contentSize.width && size.height >= contentSize.height
     }
 
-    func body(content: Content) -> some View {
-        VStack(spacing: 0) {
-            if isRunning {
-                GeometryReader { proxy in
-                    let maxSize = CGSize(width: proxy.size.width, height: proxy.size.height + proxy.safeAreaInsets.bottom)
-                    ZStack(alignment: .crossAlignment) {
-                        contentWrapper(content)
-                            .frame(width: min(maxSize.width, size.width), height: min(maxSize.height, size.height))
-                            .overlay(rectangleHint)
-                            .frame(width: size.width, height: size.height, alignment: .topLeading)
+    private var iphoneSEMinimum: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [5]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 100 : 300, height: isPortrait ? 300 : 100)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPhone Minimum")
+                    .padding()
+            }
+    }
 
-                        sizeDisplay
-                            .alignmentGuide(.crossHorizontalAlignment, computeValue: { d in
-                                size.width < 120 ? d[HorizontalAlignment.leading] - 10 : 120 })
+    private var iphoneSEFrame: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [5]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 375 : 667, height: isPortrait ? 667 : 375)
+            .overlay(alignment: .bottomTrailing) {
+                Text(isPortrait ? "iPhone SE 3rd(w:375, h: 667)" : "iPhone SE 3rd(w:667, h: 375)")
+                    .padding()
+            }
+    }
+    private var iphone8PlusFrame: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [5]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: 414, height: 736)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPhone 8 Plus(w:414, h: 736)")
+                    .padding()
+            }
+    }
 
-                        dragHandle(maxSize: maxSize)
+    private var iphone13Frame: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [5]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 390 : 844, height: isPortrait ? 844 : 390)
+            .overlay(alignment: .bottomTrailing) {
+                Text(isPortrait ? "iPhone SE 3rd(w:375, h: 667)" : "iPhone SE 3rd(w:844, h: 390)")
+                    .padding()
+            }
+    }
+    private var iphone14ProMaxFrame: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [1]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 430 : 932, height: isPortrait ? 932 : 430)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPhone 14 ProMax(w:430, h:932)")
+            }
+    }
+    private var ipadMini5Frame: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [2]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 768 : 1024, height: isPortrait ? 1024 : 768)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPad Mini5 (w:768, h:1024)")
+            }
+    }
+    private var ipad13: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [2]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: 455, height:  730)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPad 1/3")
+                    .padding()
+            }
+    }
+    private var ipad12: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [2]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: 680, height:  930)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPad 1/2")
+                    .padding()
+            }
+    }
+    private var ipad23: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [2]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: 910, height:  970)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPad 2/3")
+                    .padding()
+            }
+    }
+
+
+    private var ipadPro4th11: some View {
+        Rectangle()
+            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [2]))
+            .foregroundColor(isContentFitting ? .gray : .red)
+            .frame(width: isPortrait ? 834 : 1194, height: isPortrait ? 1194 : 834)
+            .overlay(alignment: .bottomTrailing) {
+                Text("iPad Pro 11inch(w:834, h:1194)")
+                    .padding()
+            }
+    }
+
+    private func reload(type: reloadType){
+        switch type {
+        case .iphoneSEMinimum:
+            size = CGSize(width: isPortrait ? 100 : 300, height: isPortrait ? 300 : 100)
+        case .iphoneSE:
+            size = CGSize(width: isPortrait ? 375 : 667, height: isPortrait ? 667 : 375)
+        case .iphone8plus:
+            size = CGSize(width: 414, height: 736)
+        case .iphone13:
+            size = CGSize(width: isPortrait ? 390 : 844, height: isPortrait ? 844 : 390)
+        case .iphone14promax:
+            size = CGSize(width: isPortrait ? 430 : 932, height: isPortrait ? 932 : 430)
+        case .ipadMini5:
+            size = CGSize(width: isPortrait ? 768 : 1024, height: isPortrait ? 1024 : 768)
+        case .ipadPro11:
+            size = CGSize(width: isPortrait ? 834 : 1194, height: isPortrait ? 1194 : 834)
+        case .ipadSplit13:
+            size = CGSize(width: 455, height:  730)
+        case .ipadSplit12:
+            size = CGSize(width: 680, height:  930)
+        case .ipadSplit23:
+            size = CGSize(width: 910, height:  970)
+        case .full:
+            size = CGSize(width: isPortrait ? 1024 : 1366, height: isPortrait ? 1366 : 1024)
+        }
+        isFitting = true
+        PreviewResizableViewModifier.sizeObserver.updateSize(size)
+
+    }
+    enum reloadType {
+        case iphoneSEMinimum
+        case iphoneSE
+        case iphone8plus
+        case iphone13
+        case iphone14promax
+        case ipadMini5
+        case ipadPro11
+        case ipadSplit13
+        case ipadSplit12
+        case ipadSplit23
+        case full
+    }
+    private var listSelectionIphone: some View {
+        VStack {
+
+            if hiddenToolbar {
+                VStack(alignment: .trailing,spacing: 12) {
+                    Button {
+                        reload(type: .iphoneSEMinimum)
+                    } label: {
+                        Text("Minimum")
+                    }
+                    if isPortrait {
+                        Button {
+                            reload(type: .iphoneSE)
+                        } label: {
+                            Text("iPhone SE")
+
+                        }
+
+                        Button {
+                            reload(type: .iphone8plus)
+                        } label: {
+                            Text("iPhone 8Plus")
+
+                        }
+                        Button {
+                            reload(type: .iphone13)
+                        } label: {
+                            Text("iPhone 13)")
+                        }
+
+                        Button {
+                            reload(type: .iphone14promax)
+                        } label: {
+                            Text("14 ProMax)")
+                        }
+
+                    }
+
+                    Button {
+                        reload(type: .ipadMini5)
+                    } label: {
+                        Text("iPad Mini5")
+                    }
+
+                    Button {
+                        reload(type: .ipadPro11)
+                    } label: {
+                        Text("iPad Pro 11")
+                    }
+
+                    if !isPortrait {
+                        Button {
+                            reload(type: .ipadSplit13)
+                        } label: {
+                            Text("iPad 1/3")
+                        }
+
+                        Button {
+                            reload(type: .ipadSplit12)
+                        } label: {
+                            Text("iPad 1/2")
+                        }
+
+                        Button {
+                            reload(type: .ipadSplit23)
+                        } label: {
+                            Text("iPad 2/3")
+                        }
+                    }
+
+                    Button {
+                        reload(type: .full)
+                    } label: {
+                        Text("Full")
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 20))
+                .controlSize(.large)
+
+            }
+            HStack {
+                Text(isPortrait ? "Potrait" : "Landscape")
+                    .onTapGesture {
+                        isPortrait.toggle()
+                    }
+                Button {
+                    hiddenToolbar.toggle()
+                } label: {
+                    Text("Hide Toolbar")
+                }
+
+            }
+
+            .tint(.red)
+            .padding(.top, 10)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 20))
+            .controlSize(.large)
+        }
+    }
+    func body(content: Content) -> some View {
+        VStack(spacing: 0) {
+
+            if isRunning {
+                ZStack(alignment: .topLeading) {
+                    ZStack(alignment: .bottomTrailing) {
+                        listSelectionIphone
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    }
+                    iphoneSEMinimum
+                    if isPortrait {
+                        iphoneSEFrame
+                        iphone8PlusFrame
+                        iphone13Frame
+                        iphone14ProMaxFrame
+                    }
+                    ipadMini5Frame
+                    ipadPro4th11
+                    if !isPortrait {
+                        ipad13
+                        ipad12
+                        ipad23
+                    }
+                    GeometryReader { proxy in
+                        let maxSize = CGSize(width: proxy.size.width, height: proxy.size.height + proxy.safeAreaInsets.bottom)
+                        ZStack(alignment: .crossAlignment) {
+
+                            contentWrapper(content)
+                                .frame(width: min(maxSize.width, size.width), height: min(maxSize.height, size.height))
+                                .overlay(rectangleHint)
+                                .frame(width: size.width, height: size.height, alignment: .topLeading)
+                            //                        Text("Screensize = \(PreviewResizableViewModifier.sizeObserver.viewSize.width) \(PreviewResizableViewModifier.sizeObserver.viewSize.height)")
+
+                            sizeDisplay
+                                .alignmentGuide(.crossHorizontalAlignment, computeValue: { d in
+                                    size.width < 120 ? d[HorizontalAlignment.leading] - 10 : 120 })
+
+                            dragHandle(maxSize: maxSize)
+                                .padding(.trailing, 24)
+                                .padding(.bottom, 24)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
+                }
+
+
             } else {
                 content
             }
         }
         .task {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
                 isRunning = true
             }
         }
@@ -237,8 +487,9 @@ struct PreviewResizableViewModifier: ViewModifier {
 
     private var rectangleHint: some View {
         Rectangle()
-            .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
-            .foregroundColor(isContentFitting ? .gray : .red)
+            .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [isFitting ? 3 : 10]))
+            .foregroundColor(isFitting ? .green : .red)
+
     }
 
     private func dragHandle(maxSize: CGSize) -> some View {
@@ -250,10 +501,14 @@ struct PreviewResizableViewModifier: ViewModifier {
                 .gesture(DragGesture(minimumDistance: 0.0)
                     .onChanged { value in
                         isDragging = true
+                        isFitting = false
                         size = CGSize(
                             width: min(maxSize.width, max(minSize.width, size.width + value.translation.width)),
                             height: min(maxSize.height, max(minSize.height, size.height + value.translation.height))
+
                         )
+                        PreviewResizableViewModifier.sizeObserver.updateSize(size)
+                        //                        PreviewResizableViewModifier.sizeObserver.viewSize = size
                     }
                     .onEnded { _ in
                         isDragging = false
@@ -262,23 +517,21 @@ struct PreviewResizableViewModifier: ViewModifier {
         }
         .simultaneousGesture(
             TapGesture(count: 2).onEnded { _ in
-                // Size to fit:
                 size = CGSize(width: min(maxSize.width, contentSize.width), height: min(maxSize.height, contentSize.height))
+                PreviewResizableViewModifier.sizeObserver.updateSize(size)
             }
         )
     }
 
     private var sizeDisplay: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            Text("\(text(for: contentSize))")
-                .foregroundColor(.white)
-                .background(Color.accentColor)
 
             Text("\(text(for: size))")
                 .foregroundColor(isContentFitting ? .primary : .white)
                 .background(isContentFitting ? Color(uiColor: .systemGroupedBackground) : .red)
+                .padding(.bottom, 100)
         }
-        .font(.caption)
+        .font(.system(size: 40))
         .dynamicTypeSize(.large)
         .opacity(isDragging ? 1 : 0)
         .transition(.opacity)
@@ -297,7 +550,7 @@ struct PreviewResizableViewModifier: ViewModifier {
     }
 
     private func text(for size: CGSize) -> String {
-        "w: \(Int(size.width)), h: \(Int(size.height))"
+        "w:\(Int(size.width)), h:\(Int(size.height))"
     }
 }
 
@@ -315,16 +568,30 @@ fileprivate extension HorizontalAlignment {
     static let crossHorizontalAlignment = HorizontalAlignment(CrossHorizontalAlignment.self)
 }
 
-// MARK: - View extension
-
 public extension View {
-
-    /// Makes the container for the preview resizable.
-    ///
-    /// During resizing both the size of the content and the container views are displayed so it’s easy to see whether the content view fits in the new area.
-    ///
-    /// Double-clicking the resize button adapts the container view size to the content size.
     func previewResizable() -> some View {
         modifier(PreviewResizableViewModifier())
+            .previewIpad()
+    }
+}
+
+struct CustomPreview<Content>: View where Content: View  {
+    @StateObject private var sizeObserver = ScreenSize.shared
+    @State private var contentSize: CGSize =  .zero
+    @ViewBuilder var content: () -> Content
+    var body: some View {
+        content()
+            .readSize { size in
+                contentSize = size
+            }
+            .overlay(alignment: .top, content: {
+                VStack {
+                    Text("Screen size: (w:\(Int(sizeObserver.viewSize.width)) x h:\(Int(sizeObserver.viewSize.height)))")
+                    Text("Content Size: (w:\(Int(contentSize.width)) x  h:\(Int(contentSize.height)))")
+                }
+                .offset(y: -50)
+            })
+            .border(.green)
+        .frame(width: sizeObserver.viewSize.width,height: sizeObserver.viewSize.height)
     }
 }
