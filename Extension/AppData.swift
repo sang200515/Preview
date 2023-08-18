@@ -12,6 +12,6 @@ import SwiftUI
 
 class AppData: ObservableObject {
     @Published var isDragging: Bool = false
-    @Published var isPortrait: Bool = UIDevice.current.orientation.isPortrait
+    @Published var isPortrait: Bool = true
     @Published var isFitting: Bool = false
 }

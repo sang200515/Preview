@@ -168,7 +168,7 @@
     }
     struct PreviewResizableViewModifier: ViewModifier {
         @StateObject static var sizeObserver = ScreenSize.shared
-        @State private var size = CGSize(width: UIScreen.main.bounds.width ,height:  UIScreen.main.bounds.height)
+        @State private var size = CGSize(width: 375, height: 667)
         @ObservedObject var appData = AppData()
         @State private var contentSize: CGSize = .zero
         @State private var isRunning = false
@@ -405,19 +405,11 @@
                     .controlSize(.large)
 
                 }
-                HStack {
-                    Text(appData.isPortrait ? "Potrait" : "Landscape")
-                        .onTapGesture {
-                            appData.isPortrait.toggle()
-                        }
-                    Button {
-                        hiddenToolbar.toggle()
-                    } label: {
-                        Text("Hide Toolbar")
-                    }
-
+                Button {
+                    hiddenToolbar.toggle()
+                } label: {
+                    Text("Hide Toolbar")
                 }
-
                 .tint(.red)
                 .padding(.top, 10)
                 .buttonStyle(.borderedProminent)
@@ -429,53 +421,13 @@
             VStack(spacing: 0) {
 
                 if isRunning {
-                    ZStack(alignment: .topLeading) {
-                        ZStack(alignment: .bottomTrailing) {
-                            listSelectionIphone
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        }
-                        iphoneSEMinimum
-                        if appData.isPortrait {
-                            iphoneSEFrame
-                            iphone8PlusFrame
-                            iphone13Frame
-                            iphone14ProMaxFrame
-                        }
-                        ipadMini5Frame
-                        ipadPro4th11
-                        if !appData.isPortrait {
-                            ipad13
-                            ipad12
-                            ipad23
-                        }
-                        GeometryReader { proxy in
-                            let maxSize = CGSize(width: proxy.size.width, height: proxy.size.height + proxy.safeAreaInsets.bottom)
-                            ZStack(alignment: .crossAlignment) {
-
-                                contentWrapper(content)
-                                    .frame(width: min(maxSize.width, size.width), height: min(maxSize.height, size.height))
-                                    .overlay(rectangleHint)
-                                    .frame(width: size.width, height: size.height, alignment: .topLeading)
-                                    .background(.white)
-
-                                sizeDisplay
-                                    .alignmentGuide(.crossHorizontalAlignment, computeValue: { d in
-                                        size.width < 120 ? d[HorizontalAlignment.leading] - 10 : 120 })
-
-                                dragHandle(maxSize: maxSize)
-                                    .padding(.trailing, 24)
-                                    .padding(.bottom, 24)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-
-                    }
-
+                    toolBarButtons(content: content)
 
                 } else {
                     content
                 }
             }
+            .padding()
             .task {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
                     isRunning = true
@@ -483,10 +435,76 @@
             }
         }
 
+        private  var ipadButton: some View {
+            Text(appData.isPortrait ? "Portrait" : "Landscape")
+                .font(.system(size: 18))
+                .foregroundColor(.white)
+                .padding(10)
+                .padding(.horizontal, 20)
+                .background(Color.black.opacity(0.3))
+                .clipShape(Capsule())
+                .onTapGesture {
+                    appData.isPortrait.toggle()
+                }
+                .offset(x:appData.isPortrait ? 850 : 900,y: appData.isPortrait ? 100 : 0)
+
+        }
+
+        private func toolBarButtons(content: Content) -> some View {
+            ZStack(alignment: .topLeading) {
+
+
+
+                ZStack(alignment: .bottomTrailing) {
+                    listSelectionIphone
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                }
+
+
+                ipadButton
+                iphoneSEMinimum
+                if appData.isPortrait {
+                    iphoneSEFrame
+                    iphone8PlusFrame
+                    iphone13Frame
+                    iphone14ProMaxFrame
+                }
+                ipadMini5Frame
+                ipadPro4th11
+                if !appData.isPortrait {
+                    ipad13
+                    ipad12
+                    ipad23
+                }
+                GeometryReader { proxy in
+                    let maxSize = CGSize(width: proxy.size.width, height: proxy.size.height + proxy.safeAreaInsets.bottom)
+                    ZStack(alignment: .crossAlignment) {
+
+                        contentWrapper(content)
+                            .frame(width: min(maxSize.width, size.width), height: min(maxSize.height, size.height))
+                            .overlay(rectangleHint)
+                            .frame(width: size.width, height: size.height, alignment: .topLeading)
+                            .background(.white)
+
+                        sizeDisplay
+                            .alignmentGuide(.crossHorizontalAlignment, computeValue: { d in
+                                size.width < 120 ? d[HorizontalAlignment.leading] - 10 : 120 })
+
+                        dragHandle(maxSize: maxSize)
+                            .padding(.trailing, 24)
+                            .padding(.bottom, 24)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
+            }
+        }
+
         private var rectangleHint: some View {
             Rectangle()
                 .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [appData.isFitting ? 3 : 10]))
                 .foregroundColor(appData.isFitting ? .green : .red)
+                .padding(-2)
 
         }
 
@@ -594,3 +612,37 @@
             .frame(width: sizeObserver.viewSize.width,height: sizeObserver.viewSize.height)
         }
     }
+struct DebugOverlayModifier: ViewModifier {
+    @State private var contentSize: CGSize = .zero
+   private let colors = [Color.black,Color.green, Color.blue, Color.pink, Color.gray, Color.purple, Color.red, Color.black]
+    private var randomColor: Color { colors.randomElement() ?? Color.black }
+    func body(content: Content) -> some View {
+        content
+
+            .overlay(
+              RoundedRectangle(cornerRadius: 0)
+                .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                .foregroundColor(randomColor)
+                .padding(-1)
+            )
+            .overlay(content: {
+                Text("w: \(Int(contentSize.width)), h: \(Int(contentSize.height))")
+                    .font(.system(size: 18))
+                    .foregroundColor(.white)
+                    .padding(4)
+                    .background(Color.black.opacity(0.3))
+                    .cornerRadius(4)
+                    .frame(width: 250)
+                    .offset(x: contentSize.width / 2 + 100)
+            })
+            .readSize { size in
+                contentSize = size
+            }
+    }
+}
+
+extension View {
+    func debugOverlay() -> some View {
+        self.modifier(DebugOverlayModifier())
+    }
+}
