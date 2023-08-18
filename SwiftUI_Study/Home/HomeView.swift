@@ -65,7 +65,7 @@ struct ContentView1: View {
 struct ContentView1_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView()
+        ContentView(appData: AppData())
             .previewResizable()
 
     }
