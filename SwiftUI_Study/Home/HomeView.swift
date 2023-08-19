@@ -32,14 +32,13 @@ struct ContentView1: View {
     private var starsView: some View {
         HStack {
             ForEach(1..<6) { index in
-                Image(systemName: "star.fill")
-                    .font(.largeTitle)
-                    .foregroundColor(Color.gray)
+                Color.red
                     .onTapGesture {
                         withAnimation(.easeIn) {
                             rating = index
                         }
                     }
+                    .debugOverlay()
             }
         }
     }
@@ -47,17 +46,8 @@ struct ContentView1: View {
 
     var body: some View {
 
-        CustomPreview {
-
-
-            starsView
-                .overlay {overlayView.mask(starsView)}
-
-
-
-
-
-        }
+        starsView
+            .overlay {overlayView.mask(starsView)}
 
     }
 }
@@ -65,7 +55,7 @@ struct ContentView1: View {
 struct ContentView1_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView(appData: AppData())
+        ContentView1()
             .previewResizable()
 
     }

@@ -7,94 +7,41 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var appData: AppData
+    @StateObject private var sizeObserver = ScreenSize.shared
     var body: some View {
-        VStack {
-//            Text("Hello, Worl123123123123123d123123213123123123!")
-//                .padding()
-//                .background(.green)
-//                .debugOverlay()
+        VStack (spacing: 10){
 
-            Home()
+            Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
+                .background(.blue)
                 .debugOverlay()
 
-        }.debugOverlay()
+
+            Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
+                .debugOverlay()
+
+
+        }
     }
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(appData: AppData())
+        ContentView()
             .previewResizable()
     }
 }
 
 
 struct Home: View {
-    @State var selectedTab = "Home"
-    var edges = UIApplication.shared.windows.first?.safeAreaInsets
-    @Namespace var animation
-    @StateObject var modelData = ModelView()
+    @StateObject private var sizeObserver = ScreenSize.shared
 
     var body: some View {
         VStack(spacing: 0) {
-            //GeometryReader { _ in
-                ZStack {
-                    // Tabs
-                    NavigationView {
-                        ScrollView {
-                            ForEach(1...25, id: \.self) { i in
-                                NavigationLink(destination: Text("Home Data \(i)")) {
-                                    VStack(alignment: .leading) {
-                                        Text("Home Data \(i)")
-                                            .padding()
-                                            .foregroundColor(.black)
-
-                                        Divider()
-                                    }
-                                }
-                            }
-                            .padding(.bottom)
-                        }
-                        .navigationBarHidden(true)
-                    }
-                    .opacity(selectedTab == "Home" ? 1 : 0)
-
-                    Text("Restaurants")
-                        .opacity(selectedTab == "Restaurants" ? 1 : 0)
-
-                    Text("Orders")
-                        .opacity(selectedTab == "Orders" ? 1 : 0)
-
-                    Text("Rewards")
-                        .opacity(selectedTab == "Rewards" ? 1 : 0)
-                }
-            //}
-            .onChange(of: selectedTab) { (_) in
-                switch(selectedTab) {
-                    case "Orders": if !modelData.isOrderLoad { modelData.loadOrders() }
-                    case "Restaurants": if !modelData.isRestaurantLoad { modelData.loadRestaurants() }
-                    case "Rewards": if !modelData.isRewardLoad { modelData.loadReward() }
-                    default: ()
-                }
-            }
-
-            // TabView
-            HStack(spacing: 0) {
-                ForEach(tabs, id: \.self) { tab in
-                    TabButton(title: tab, selectedTab: $selectedTab, animation: animation)
-
-                    if tab != tabs.last {
-                        Spacer(minLength: 0)
-                    }
-                }
-            }
-            .padding(.horizontal, 30)
-            // for iPhone like 8 and SE
-            .padding(.bottom, edges!.bottom == 0 ? 15 : edges!.bottom)
-            .background(Color.white)
-        }
-        .ignoresSafeArea(.all, edges: .bottom)
-        .background(Color.black.opacity(0.06).ignoresSafeArea(.all, edges: .all))
+            Text("Restaurants")
+                .debugOverlay()
+            Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
+                .debugOverlay()
+            Text("Rewards")
+        }.background(.yellow)
     }
 }
 

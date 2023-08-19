@@ -10,8 +10,4 @@ import Combine
 import SwiftUI
 
 
-class AppData: ObservableObject {
-    @Published var isDragging: Bool = false
-    @Published var isPortrait: Bool = true
-    @Published var isFitting: Bool = false
-}
+

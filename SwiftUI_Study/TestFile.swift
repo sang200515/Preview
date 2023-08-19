@@ -14,7 +14,7 @@ import SwiftUI
 
 struct ContentView3_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(appData: AppData())
+        ContentView()
             .previewResizable()
     }
 }

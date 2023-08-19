@@ -47,7 +47,7 @@ struct StarView: View {
 struct StarView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView(appData: AppData())
+        ContentView()
     }
 }
 
