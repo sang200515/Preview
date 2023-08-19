@@ -530,7 +530,6 @@ struct PreviewResizableViewModifier: ViewModifier {
 
                         )
                         sizeObserver.updateSize(size)
-                        //                        PreviewResizableViewModifier.sizeObserver.viewSize = size
                     }
                     .onEnded { _ in
                         sizeObserver.isDragging = false
@@ -636,7 +635,7 @@ extension View {
 }
 class ScreenSize: ObservableObject {
     static let shared = ScreenSize()
-    @Published var isDragging: Bool = true
+    @Published var isDragging: Bool = false
     @Published var isPortrait: Bool = true
     @Published var isFitting: Bool = false
     @Published var viewSize: CGSize = UIScreen.main.bounds.size

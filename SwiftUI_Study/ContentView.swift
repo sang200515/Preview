@@ -8,21 +8,29 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var sizeObserver = ScreenSize.shared
+
+    let data: [String] = ["Hi", "Hello", "Hey everyone"]
+    let myString: String = "Hello"
+
+
+
     var body: some View {
         VStack (spacing: 10){
 
-            Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
-                .frame(width: 375, height: 667)
+            ForEach(0..<5) { index in
+                Circle()
+                    .frame(height: 150)
+            }
+             
                 .debugOverlay()
 
-
-            Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
-                .debugOverlay()
 
 
         }
     }
 }
+
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
