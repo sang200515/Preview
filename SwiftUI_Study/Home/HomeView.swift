@@ -14,23 +14,40 @@ import SwiftUI
 
 struct ContentView1: View {
 
-    @State var textFieldText: String = ""
-    @State var scrollToIndex: Int = 0
+    @State var rating:Int = 0
+
+
+    private var overlayView: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(LinearGradient(gradient: Gradient(colors: [Color.red, Color.blue]), startPoint: .leading, endPoint: .trailing))
+                    .foregroundColor(.yellow)
+                    .frame(width: CGFloat(rating) / 5 * geometry.size.width)
+            }
+        }
+        .allowsHitTesting(false)
+    }
+
+    private var starsView: some View {
+        HStack {
+            ForEach(1..<6) { index in
+                Color.red
+                    .onTapGesture {
+                        withAnimation(.easeIn) {
+                            rating = index
+                        }
+                    }
+                    .debugOverlay()
+            }
+        }
+    }
+
 
     var body: some View {
 
-        CustomPreview {
-
-
-
-
-
-
-            Text("Buttontto2 12313 1323 12 123123 123123131231313 123 132 1231232131 21312323232 1231 313 123213 1321 3 3 3 3 3 3 3 3 3 3")
-                .frame(maxWidth: 375)
-
-
-        }
+        starsView
+            .overlay {overlayView.mask(starsView)}
 
     }
 }
@@ -38,7 +55,7 @@ struct ContentView1: View {
 struct ContentView1_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView()
+        ContentView1()
             .previewResizable()
 
     }
