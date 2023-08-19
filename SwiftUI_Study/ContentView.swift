@@ -12,7 +12,7 @@ struct ContentView: View {
         VStack (spacing: 10){
 
             Text("OrdersOrdersOrdersOrdersOrdersOrdersOrdersOrdersOrders")
-                .background(.blue)
+                .frame(width: 375, height: 667)
                 .debugOverlay()
 
 
