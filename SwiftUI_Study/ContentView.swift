@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct ContentView: View {
+struct ContentView2: View {
     @StateObject private var sizeObserver = ScreenSize.shared
 
     let data: [String] = ["Hi", "Hello", "Hey everyone"]
@@ -21,19 +21,15 @@ struct ContentView: View {
                 Circle()
                     .frame(height: 150)
             }
-             
-                .debugOverlay()
-
-
-
+            .debugOverlay()
         }
     }
 }
 
 
-struct ContentView_Previews: PreviewProvider {
+struct ContentView2_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView2()
             .previewResizable()
     }
 }
@@ -53,7 +49,6 @@ struct Home: View {
     }
 }
 
-// Tab Button
 struct TabButton: View {
     var title: String
     @Binding var selectedTab: String
@@ -99,8 +94,6 @@ struct TabButton: View {
         }
     }
 }
-
-// Custom Shape
 struct CustomShape: Shape {
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 10, height: 10))
@@ -108,19 +101,14 @@ struct CustomShape: Shape {
         return Path(path.cgPath)
     }
 }
-
-// Both title image name are same
 var tabs = ["Home", "Restaurants", "Orders", "Rewards"]
 
-// If you simply having Views and not that much network task means its fine
-// otherwise, use this method to load data when the tab opens
 class ModelView: ObservableObject {
     @Published var isOrderLoad = false
     @Published var isRestaurantLoad = false
     @Published var isRewardLoad = false
 
     init() {
-        // load initial data
         print("Home Data Loaded")
     }
 
