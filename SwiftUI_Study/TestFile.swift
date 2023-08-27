@@ -10,26 +10,31 @@ import SwiftUI
 
 
 struct ContentView: View {
-        let columns = [GridItem(), GridItem(),GridItem()]
+    @StateObject private var sizeObserver = ScreenSize.shared
+    @State var gridConfig: [GridItem] = [GridItem(),GridItem(),GridItem()]
+    @State private var isFullScreen = false
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: gridConfig, spacing: 8) {
+                ForEach(0...15, id: \.self) { value in
+                    DebugImage().asyncImageDebug
+                        .frame(width: (sizeObserver.viewSize.width - 18) / 3, height: (sizeObserver.viewSize.width - 18) / 3)
+                        .cornerRadius(20)
 
-        var body: some View {
-             ScrollView {
-                 LazyVGrid(columns: columns,spacing: 10) {
-                     ForEach(0...3, id: \.self) { value in
-                         DebugImage().asyncImageDebug
-                     }
-                 }
-             }
-        }
+                }
+            }
 
-        private func emoji(_ value: Int) -> String {
-            guard let scalar = UnicodeScalar(value) else { return "?" }
-            return String(Character(scalar))
         }
     }
+
+    private func emoji(_ value: Int) -> String {
+        guard let scalar = UnicodeScalar(value) else { return "?" }
+        return String(Character(scalar))
+    }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()   .previewResizable()
+        ContentView().previewResizable()
     }
 }
 

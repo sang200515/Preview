@@ -666,7 +666,7 @@ struct RandomColor: ViewModifier {
 class DebugImage {
     static let shared = DebugImage()
     private let randomeSize: [Int] = [10,20,40,50,100,150,170,220,320,440,470,550,650,620,410,390,512,668,765,984,784,832,934,1200]
-    private let randomImageID: String = "\((1...237).randomElement() ?? 1)"
+    private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
     private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
     private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
     var randomURL: URL {
@@ -690,8 +690,8 @@ class DebugImage {
             ProgressView()
         }
         .overlay (alignment: .bottomLeading){
-            Text("url: \(randomURL)")
-                .offset(y: 20)
+//            Text("url: \(randomURL)")
+//                .offset(y: 20)
         }
     }
 }
