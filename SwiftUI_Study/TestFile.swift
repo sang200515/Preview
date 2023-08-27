@@ -10,32 +10,29 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @State var itemHeight : CGFloat = 0
+        let columns = [GridItem(), GridItem(),GridItem()]
+
         var body: some View {
-            VStack {
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(0..<19) { item in
-                            VStack {
-                                Text("Number123 \(item)")
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.yellow)
-                                    .frame(height: 35)
-                            }
-                            Divider()
-                        }
+             ScrollView {
+                 LazyVGrid(columns: columns,spacing: 10) {
+                     ForEach(0...3, id: \.self) { value in
+                         DebugImage().asyncImageDebug
+                     }
+                 }
+             }
+        }
 
-                    }
-                    .frame(height: 200)
-                }
-                .debugBackground()
-
-                Spacer()
-            }
+        private func emoji(_ value: Int) -> String {
+            guard let scalar = UnicodeScalar(value) else { return "?" }
+            return String(Character(scalar))
         }
     }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView()   .previewResizable()
     }
 }
+
+//DebugImage().debugAsyncImage
+//    .frame(width: 50, height: 50)
+

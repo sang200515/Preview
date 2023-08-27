@@ -519,7 +519,9 @@ struct PreviewResizableViewModifier: ViewModifier {
             Image(systemName: "arrow.up.backward.and.arrow.down.forward")
                 .frame(width: handleSize, height: handleSize)
                 .dynamicTypeSize(.large)
-                .background(Color.gray.opacity(0.2).frame(width: handleSize, height: handleSize))
+                .background(sizeObserver.isDragging ? Color.green : Color.red.opacity(0.2))
+                .frame(width: handleSize, height: handleSize)
+                .cornerRadius(5)
                 .gesture(DragGesture(minimumDistance: 0.0)
                     .onChanged { value in
                         sizeObserver.isDragging = true
@@ -580,14 +582,6 @@ fileprivate extension HorizontalAlignment {
     static let crossHorizontalAlignment = HorizontalAlignment(CrossHorizontalAlignment.self)
 }
 
-public extension View {
-    func previewResizable() -> some View {
-        modifier(PreviewResizableViewModifier())
-            .previewIpad()
-
-    }
-}
-
 struct DebugOverlayModifier: ViewModifier {
     @StateObject private var sizeObserver = ScreenSize.shared
     @State private var contentSize: CGSize = .zero
@@ -595,7 +589,6 @@ struct DebugOverlayModifier: ViewModifier {
     private var randomColor: Color { colors.randomElement() ?? Color.black }
     func body(content: Content) -> some View {
         content
-
             .overlay{
                 if sizeObserver.isDragging {
                     RoundedRectangle(cornerRadius: 0)
@@ -609,7 +602,6 @@ struct DebugOverlayModifier: ViewModifier {
                     HStack(spacing: 0){
                         Text("w: \(Int(contentSize.width)),")
                             .background(contentSize.width == sizeObserver.viewSize.width ? Color.green.opacity(0.7) : Color.black.opacity(0.4))
-                        //
                         Text(" h:\(Int(contentSize.height))")
                             .background(contentSize.height == sizeObserver.viewSize.height ? Color.green.opacity(0.7) : Color.black.opacity(0.4))
                     }
@@ -628,9 +620,26 @@ struct DebugOverlayModifier: ViewModifier {
     }
 }
 
+extension Color {
+    static var random: Color {
+        return Color(
+            red: .random(in: 0...1),
+            green: .random(in: 0...1),
+            blue: .random(in: 0...1)
+        )
+    }
+}
+
 extension View {
     func debugOverlay() -> some View {
         self.modifier(DebugOverlayModifier())
+    }
+    func debugBackground() -> some View {
+        self.modifier(RandomColor())
+    }
+    func previewResizable() -> some View {
+        modifier(PreviewResizableViewModifier())
+            .previewIpad()
     }
 }
 class ScreenSize: ObservableObject {
@@ -653,17 +662,36 @@ struct RandomColor: ViewModifier {
     }
 }
 
-extension Color {
-    static var random: Color {
-        return Color(
-            red: .random(in: 0...1),
-            green: .random(in: 0...1),
-            blue: .random(in: 0...1)
-        )
+
+class DebugImage {
+    static let shared = DebugImage()
+    private let randomeSize: [Int] = [10,20,40,50,100,150,170,220,320,440,470,550,650,620,410,390,512,668,765,984,784,832,934,1200]
+    private let randomImageID: String = "\((1...237).randomElement() ?? 1)"
+    private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
+    private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
+    var randomURL: URL {
+        let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)") ?? URL(string: "https://picsum.photos/id/125/220/300")!
+        print(url.absoluteString)
+        return url
     }
-}
-extension View {
-    func debugBackground() -> some View {
-        self.modifier(RandomColor())
+    var imageURL200x200: URL {
+        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
+    }
+    var imageURL400x200: URL {
+        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
+    }
+    var imageURL200x400: URL {
+        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
+    }
+    var asyncImageDebug : some View {
+        AsyncImage(url: randomURL) { image in
+            image.resizable()
+        } placeholder: {
+            ProgressView()
+        }
+        .overlay (alignment: .bottomLeading){
+            Text("url: \(randomURL)")
+                .offset(y: 20)
+        }
     }
 }
