@@ -644,3 +644,26 @@ class ScreenSize: ObservableObject {
         viewSize = size
     }
 }
+struct RandomColor: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(
+                Color.random
+            )
+    }
+}
+
+extension Color {
+    static var random: Color {
+        return Color(
+            red: .random(in: 0...1),
+            green: .random(in: 0...1),
+            blue: .random(in: 0...1)
+        )
+    }
+}
+extension View {
+    func debugBackground() -> some View {
+        self.modifier(RandomColor())
+    }
+}

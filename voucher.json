@@ -1,0 +1,28 @@
+{
+    "voucher_collection_request_list": [{
+        "collection_id": "12903073042",
+        "offset": 0,
+        "limit": 1,
+        "component_id": 1692184896099,
+        "component_type": 1,
+        "number_of_vouchers_per_row": 1,
+        "microsite_id": 46189
+    }, {
+        "collection_id": "12902299666",
+        "offset": 0,
+        "limit": 1,
+        "component_id": 1692184896115,
+        "component_type": 1,
+        "number_of_vouchers_per_row": 1,
+        "microsite_id": 46189
+    }, {
+        "collection_id": "12902304914",
+        "offset": 0,
+        "limit": 1,
+        "component_id": 1692246644791,
+        "component_type": 1,
+        "number_of_vouchers_per_row": 1,
+        "microsite_id": 46189
+    }]
+}
+

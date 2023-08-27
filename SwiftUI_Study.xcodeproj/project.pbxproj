@@ -27,6 +27,8 @@
 		8EA70F612A8FC0B1009CF991 /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA70F602A8FC0B1009CF991 /* AppData.swift */; };
 		8EE963F22A8A5AF700767F66 /* View+PreviewDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */; };
 		8EE963F42A8A6AAE00767F66 /* Modifies+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */; };
+		8EF6B7602A9A4250009BC78A /* voucher.json in Resources */ = {isa = PBXBuildFile; fileRef = 8EF6B75F2A9A4250009BC78A /* voucher.json */; };
+		8EF6B7622A9A4260009BC78A /* trash.json in Resources */ = {isa = PBXBuildFile; fileRef = 8EF6B7612A9A4260009BC78A /* trash.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		8EA70F602A8FC0B1009CF991 /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
 		8EE963F12A8A5AF700767F66 /* View+PreviewDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PreviewDevice.swift"; sourceTree = "<group>"; };
 		8EE963F32A8A6AAE00767F66 /* Modifies+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Modifies+View.swift"; sourceTree = "<group>"; };
+		8EF6B75F2A9A4250009BC78A /* voucher.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = voucher.json; sourceTree = "<group>"; };
+		8EF6B7612A9A4260009BC78A /* trash.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = trash.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 		8E8B6F9D2A5EE71C007FEAC3 = {
 			isa = PBXGroup;
 			children = (
+				8EF6B7612A9A4260009BC78A /* trash.json */,
+				8EF6B75F2A9A4250009BC78A /* voucher.json */,
 				8E90C4F52A8CFF98007FB02F /* Extension */,
 				8E8B6FA82A5EE71C007FEAC3 /* SwiftUI_Study */,
 				8E8B6FA72A5EE71C007FEAC3 /* Products */,
@@ -209,8 +215,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EF6B7622A9A4260009BC78A /* trash.json in Resources */,
 				8E8B6FB12A5EE71E007FEAC3 /* Preview Assets.xcassets in Resources */,
 				8E8B6FAE2A5EE71E007FEAC3 /* Assets.xcassets in Resources */,
+				8EF6B7602A9A4250009BC78A /* voucher.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
