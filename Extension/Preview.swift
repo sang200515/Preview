@@ -151,7 +151,7 @@ fileprivate struct SizePreferenceKey: PreferenceKey {
 }
 struct PreviewResizableViewModifier: ViewModifier {
     @StateObject private var sizeObserver = ScreenSize.shared
-    @State private var size = CGSize(width: 375, height: 667)
+    @State private var size = CGSize(width: 390, height: 844)
     @State private var contentSize: CGSize = .zero
     @State private var isRunning = false
     @State private var hiddenToolbar = true
@@ -199,7 +199,7 @@ struct PreviewResizableViewModifier: ViewModifier {
             .foregroundColor(.gray)
             .frame(width: sizeObserver.isPortrait ? 390 : 844, height: sizeObserver.isPortrait ? 844 : 390)
             .overlay(alignment: .bottomTrailing) {
-                Text(sizeObserver.isPortrait ? "iPhone SE 3rd(w:375, h: 667)" : "iPhone SE 3rd(w:844, h: 390)")
+                Text(sizeObserver.isPortrait ? "iPhone 13(w:390, h: 844)" : "iPhone 13(w:844, h: 390)")
                     .padding()
             }
     }
@@ -566,8 +566,8 @@ struct ImageDataSample { //MARK: Image ✅
 extension Bool { //MARK: Bool ✅
     static let listRandom: [Bool] = [true, false]
     static let listRandomOptional: [Bool?] = [nil,true, false]
-    static func random() -> Bool {  listRandom.randomElement() ?? false }
-    static func randomOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
+    static func randomBool() -> Bool {  listRandom.randomElement() ?? false }
+    static func randomBoolOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
 }
 extension String {//MARK: String ✅
     static let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
