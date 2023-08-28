@@ -11,21 +11,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var sizeObserver = ScreenSize.shared
-    @State var gridConfig: [GridItem] = [GridItem(),GridItem(),GridItem()]
-    @State private var isFullScreen = false
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: gridConfig, spacing: 8) {
-                ForEach(0...65, id: \.self) { value in
-                    VStack {
-//                        DebugDataSource.Image().asyncImageDebug
-//                            .frame(width: .infinity, height: 140)
-                        Text(DebugDataSource.StringDataSample().random(20))
-                            .debugBackground()
+            ScrollView {
+                ForEach(1...10, id: \.self) { i in
+                    VStack(spacing: 20) {
+                        ImageDataSample().imageTest
+                        Text(verbatim: .randomString(100))
                     }
                 }
             }
-        }
+            .navigationTitle("Dark Mode Example")
+            .navigationBarTitleDisplayMode(.automatic)
     }
 }
 struct ContentView_Previews: PreviewProvider {
@@ -34,7 +30,3 @@ struct ContentView_Previews: PreviewProvider {
             .previewResizable()
     }
 }
-
-//DebugImage().debugAsyncImage
-//    .frame(width: 50, height: 50)
-

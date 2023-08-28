@@ -540,51 +540,48 @@ extension Color {
         )
     }
 }
-class DebugDataSource {
-    static let shared = DebugDataSource()
-    struct ImageDataSample { //MARK: Image ✅
-        private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
-        private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
-        private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
-        private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
-        var randomURL: URL {
-            let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)")!
-            print(url.absoluteString)
-            return url
-        }
-        var imageURL200x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-        var imageURL400x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-        var imageURL200x400: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-        var asyncImageDebug : some View {
-            AsyncImage(url: randomURL) { image in
-                image.resizable()
-            } placeholder: {
-                ProgressView()
-            }
-        }
-    }
-    struct StringDataSample { //MARK: string ✅
-        private let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
-        func random(_ length: Int = 20) -> String {
-            let randomCount: Int = (1...length).randomElement() ?? 1
-            return String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})
-        }
 
-        func randomOptional(_ length: Int = 20) -> String? {
-            let randomCount: Int = (1...length).randomElement() ?? 1
-            let listValue:[String?] = [nil, String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("sai logic roi")})]
-            return listValue.randomElement() ?? nil
-        }
+struct ImageDataSample { //MARK: Image ✅
+    private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
+    private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
+    private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
+    private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
+    var randomURL: URL {
+        let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)")!
+        print(url.absoluteString)
+        return url
     }
-
-    struct BoolDataSample {
-        private let listRandom: [Bool] = [true, false]
-        private let listRandomOptional: [Bool?] = [nil,true, false]
-        func random() -> Bool {  listRandom.randomElement() ?? false }
-        func randomOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
+    var imageURL200x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+    var imageURL400x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+    var imageURL200x400: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+    var imageTest : some View {
+        AsyncImage(url: randomURL) { image in
+            image.resizable()
+        } placeholder: {
+            ProgressView()
+        }
     }
 }
 
+extension Bool { //MARK: Bool ✅
+    static let listRandom: [Bool] = [true, false]
+    static let listRandomOptional: [Bool?] = [nil,true, false]
+    static func random() -> Bool {  listRandom.randomElement() ?? false }
+    static func randomOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
+}
+extension String {//MARK: String ✅
+    static let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
+    static func randomString(_ length: Int = 20) -> String {
+        let randomCount: Int = (1...length).randomElement() ?? 1
+        return String(String((0..<randomCount).map { _ in String.paragraph.randomElement() ?? String.Element("test")}))
+    }
+
+    static  func randomStringOptional(_ length: Int = 20) -> String? {
+        let randomCount: Int = (1...length).randomElement() ?? 1
+        let listValue:[String?] = [nil, String((0..<randomCount).map { _ in String.paragraph.randomElement() ?? String.Element("sai logic roi")})]
+        return listValue.randomElement() ?? nil
+    }
+}
 extension View {
     func debugOverlay() -> some View {
         self.modifier(DebugOverlayModifier())
