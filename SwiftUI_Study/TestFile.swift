@@ -16,25 +16,22 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: gridConfig, spacing: 8) {
-                ForEach(0...15, id: \.self) { value in
-                    DebugImage().asyncImageDebug
-                        .frame(width: (sizeObserver.viewSize.width - 18) / 3, height: (sizeObserver.viewSize.width - 18) / 3)
-                        .cornerRadius(20)
-
+                ForEach(0...65, id: \.self) { value in
+                    VStack {
+//                        DebugDataSource.Image().asyncImageDebug
+//                            .frame(width: .infinity, height: 140)
+                        Text(DebugDataSource.StringDataSample().random(20))
+                            .debugBackground()
+                    }
                 }
             }
-
         }
-    }
-
-    private func emoji(_ value: Int) -> String {
-        guard let scalar = UnicodeScalar(value) else { return "?" }
-        return String(Character(scalar))
     }
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().previewResizable()
+        ContentView()
+            .previewResizable()
     }
 }
 

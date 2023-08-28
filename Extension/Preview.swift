@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public enum Device: String {
+public enum PreviewDevices: String {
     case iPhone13
     case iPhoneSE3rdGen
     case iPadPro3rdGen
@@ -73,13 +73,12 @@ public enum Device: String {
 @available(iOS 13.0, OSX 10.15, macCatalyst 13.0, tvOS 13.0, watchOS 6.0, *)
 extension View {
     var idiom: UIUserInterfaceIdiom  { UIDevice.current.userInterfaceIdiom }
-    func previewDevice(device: Device) -> some View {
+    func previewDevice(device: PreviewDevices) -> some View {
         previewDevice(PreviewDevice(rawValue: device.previewDevice))
             .previewDisplayName(device.previewDisplayName)
     }
 
-    func previewIpad(device: Device = .iPadPro3rdGen, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
-
+    func previewIpad(device: PreviewDevices = .iPadPro3rdGen, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
         ForEach(0..<2, id: \.self) { index2 in
             previewDevice(PreviewDevice(rawValue: device.previewDevice))
                 .previewDisplayName(device.previewDisplayName)
@@ -88,19 +87,17 @@ extension View {
 
     }
 
-    func previewIPhone(device: Device = .iPhone13, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
-
+    func previewIPhone(device: PreviewDevices = .iPhone13, orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]) -> some View {
         ForEach(0..<2, id: \.self) { index2 in
             previewDevice(PreviewDevice(rawValue: device.previewDevice))
                 .previewDisplayName(device.previewDisplayName)
                 .previewInterfaceOrientation(orientations[index2])
         }
-
     }
 
     @ViewBuilder
     func previewDevicesNecessary(
-        devices: [Device] = [
+        devices: [PreviewDevices] = [
             .iPhone13,
             .iPhoneSE3rdGen,
             .iPadPro3rdGen,
@@ -124,9 +121,7 @@ extension View {
                         .previewInterfaceOrientation(orientations[index2])
 
                 }
-
             }
-
         }
     }
 }
@@ -152,11 +147,8 @@ struct ChildSizeReader<Content: View>: View {
 
 fileprivate struct SizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero
-
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
 }
-
-
 struct PreviewResizableViewModifier: ViewModifier {
     @StateObject private var sizeObserver = ScreenSize.shared
     @State private var size = CGSize(width: 375, height: 667)
@@ -260,7 +252,6 @@ struct PreviewResizableViewModifier: ViewModifier {
             }
     }
 
-
     private var ipadPro4th11: some View {
         Rectangle()
             .strokeBorder(style: StrokeStyle(lineWidth:1, dash: [5]))
@@ -299,8 +290,6 @@ struct PreviewResizableViewModifier: ViewModifier {
         }
         sizeObserver.isFitting = true
         sizeObserver.updateSize(size)
-
-
     }
     enum reloadType {
         case iphoneSEMinimum
@@ -317,121 +306,48 @@ struct PreviewResizableViewModifier: ViewModifier {
     }
     private var listSelectionIphone: some View {
         VStack {
-
             if hiddenToolbar {
                 VStack(alignment: .trailing,spacing: 12) {
-                    Button {
-                        sizeObserver.isDragging.toggle()
-                    } label: {
-                        Text("Drag = \(sizeObserver.isDragging ? "true" : "false")")
-                    }
-                    .tint(sizeObserver.isDragging ? .green : .red)
-                    .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.roundedRectangle(radius: 20))
-
-                    Button {
-                        reload(type: .iphoneSEMinimum)
-                    } label: {
-                        Text("Minimum")
-                    }
+                    Button {sizeObserver.isDragging.toggle()} label: {Text("Drag = \(sizeObserver.isDragging ? "true" : "false")")}
+                        .tint(sizeObserver.isDragging ? .green : .red)
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.roundedRectangle(radius: 20))
+                    Button {reload(type: .iphoneSEMinimum)} label: {Text("Minimum")}
                     if sizeObserver.isPortrait {
-                        Button {
-                            reload(type: .iphoneSE)
-                        } label: {
-                            Text("iPhone SE")
-
-                        }
-
-                        Button {
-                            reload(type: .iphone8plus)
-                        } label: {
-                            Text("iPhone 8Plus")
-
-                        }
-                        Button {
-                            reload(type: .iphone13)
-                        } label: {
-                            Text("iPhone 13)")
-                        }
-
-                        Button {
-                            reload(type: .iphone14promax)
-                        } label: {
-                            Text("14 ProMax)")
-                        }
-
+                        Button {reload(type: .iphoneSE) } label: { Text("iPhone SE") }
+                        Button {reload(type: .iphone8plus)} label: {Text("iPhone 8Plus") }
+                        Button {reload(type: .iphone13)} label: {Text("iPhone 13)") }
+                        Button {reload(type: .iphone14promax)} label: {Text("14 ProMax)")}
                     }
-
-                    Button {
-                        reload(type: .ipadMini5)
-                    } label: {
-                        Text("iPad Mini5")
-                    }
-
-                    Button {
-                        reload(type: .ipadPro11)
-                    } label: {
-                        Text("iPad Pro 11")
-                    }
-
+                    Button {reload(type: .ipadMini5)} label: {Text("iPad Mini5")}
+                    Button {reload(type: .ipadPro11)} label: {Text("iPad Pro 11")}
                     if !sizeObserver.isPortrait {
-                        Button {
-                            reload(type: .ipadSplit13)
-                        } label: {
-                            Text("iPad 1/3")
-                        }
-
-                        Button {
-                            reload(type: .ipadSplit12)
-                        } label: {
-                            Text("iPad 1/2")
-                        }
-
-                        Button {
-                            reload(type: .ipadSplit23)
-                        } label: {
-                            Text("iPad 2/3")
-                        }
+                        Button {reload(type: .ipadSplit13)} label: {Text("iPad 1/3")}
+                        Button {reload(type: .ipadSplit12)} label: {Text("iPad 1/2")}
+                        Button {reload(type: .ipadSplit23) } label: {Text("iPad 2/3")}
                     }
-
-                    Button {
-                        reload(type: .full)
-                    } label: {
-                        Text("Full")
-                    }
+                    Button {reload(type: .full)} label: {Text("Full") }
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.roundedRectangle(radius: 20))
                 .controlSize(.large)
-
             }
-            Button {
-                hiddenToolbar.toggle()
-            } label: {
-                Text("Hide Toolbar")
+            Button { hiddenToolbar.toggle()} label: { Text("Hide Toolbar")
+                    .tint(.red)
+                    .padding(.top, 10)
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.roundedRectangle(radius: 20))
+                    .controlSize(.large)
             }
-            .tint(.red)
-            .padding(.top, 10)
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.roundedRectangle(radius: 20))
-            .controlSize(.large)
         }
     }
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
-
-            if isRunning {
-                toolBarButtons(content: content)
-
-            } else {
-                content
-            }
+            if isRunning {toolBarButtons(content: content)} else {content}
         }
         .padding()
         .task {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
-                isRunning = true
-            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { isRunning = true }
         }
     }
 
@@ -443,24 +359,16 @@ struct PreviewResizableViewModifier: ViewModifier {
             .padding(.horizontal, 20)
             .background(sizeObserver.isPortrait ? .green : .red)
             .clipShape(Capsule())
-            .onTapGesture {
-                sizeObserver.isPortrait.toggle()
-            }
+            .onTapGesture { sizeObserver.isPortrait.toggle() }
             .offset(x:sizeObserver.isPortrait ? 750 : 800,y: sizeObserver.isPortrait ? 100 : 0)
-
     }
 
     private func toolBarButtons(content: Content) -> some View {
         ZStack(alignment: .topLeading) {
-
-
-
             ZStack(alignment: .bottomTrailing) {
                 listSelectionIphone
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             }
-
-
             ipadButton
             iphoneSEMinimum
             if sizeObserver.isPortrait {
@@ -479,7 +387,6 @@ struct PreviewResizableViewModifier: ViewModifier {
             GeometryReader { proxy in
                 let maxSize = CGSize(width: proxy.size.width, height: proxy.size.height + proxy.safeAreaInsets.bottom)
                 ZStack(alignment: .crossAlignment) {
-
                     contentWrapper(content)
                         .frame(width: min(maxSize.width, size.width), height: min(maxSize.height, size.height))
                         .overlay(rectangleHint)
@@ -510,8 +417,6 @@ struct PreviewResizableViewModifier: ViewModifier {
             .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [sizeObserver.isFitting ? 3 : 10]))
             .padding(-2)
             .foregroundColor(sizeObserver.isFitting ? .green : .red)
-
-
     }
 
     private func dragHandle(maxSize: CGSize) -> some View {
@@ -529,7 +434,6 @@ struct PreviewResizableViewModifier: ViewModifier {
                         size = CGSize(
                             width: min(maxSize.width, max(minSize.width, size.width + value.translation.width)),
                             height: min(maxSize.height, max(minSize.height, size.height + value.translation.height))
-
                         )
                         sizeObserver.updateSize(size)
                     }
@@ -562,12 +466,9 @@ struct PreviewResizableViewModifier: ViewModifier {
         ChildSizeReader(size: $contentSize) {
             content
         }
-
     }
 
-    private func text(for size: CGSize) -> String {
-        "w:\(Int(size.width)), h:\(Int(size.height))"
-    }
+    private func text(for size: CGSize) -> String { "w:\(Int(size.width)), h:\(Int(size.height))"}
 }
 
 fileprivate extension Alignment {
@@ -575,9 +476,7 @@ fileprivate extension Alignment {
 }
 fileprivate extension HorizontalAlignment {
     private enum CrossHorizontalAlignment : AlignmentID {
-        static func defaultValue(in d: ViewDimensions) -> CGFloat {
-            return d[.trailing]
-        }
+        static func defaultValue(in d: ViewDimensions) -> CGFloat { return d[.trailing]  }
     }
     static let crossHorizontalAlignment = HorizontalAlignment(CrossHorizontalAlignment.self)
 }
@@ -585,15 +484,13 @@ fileprivate extension HorizontalAlignment {
 struct DebugOverlayModifier: ViewModifier {
     @StateObject private var sizeObserver = ScreenSize.shared
     @State private var contentSize: CGSize = .zero
-    private let colors = [Color.black, Color.blue, Color.pink, Color.gray, Color.purple, Color.red, Color.black]
-    private var randomColor: Color { colors.randomElement() ?? Color.black }
     func body(content: Content) -> some View {
         content
             .overlay{
                 if sizeObserver.isDragging {
                     RoundedRectangle(cornerRadius: 0)
                         .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                        .foregroundColor(randomColor)
+                        .foregroundColor(Color.random)
                         .padding(-1)
                 }
             }
@@ -612,11 +509,25 @@ struct DebugOverlayModifier: ViewModifier {
                     .frame(width: 250)
                     .offset(x: contentSize.width / 2 + 100)
                 }
-
             })
             .readSize { size in
                 contentSize = size
             }
+    }
+}
+
+class ScreenSize: ObservableObject {
+    static let shared = ScreenSize()
+    @Published var isDragging: Bool = false
+    @Published var isPortrait: Bool = true
+    @Published var isFitting: Bool = false
+    @Published var viewSize: CGSize = UIScreen.main.bounds.size
+
+    func updateSize(_ size: CGSize) { viewSize = size }
+}
+struct RandomColor: ViewModifier {
+    func body(content: Content) -> some View {
+        content.background(Color.random)
     }
 }
 
@@ -627,6 +538,52 @@ extension Color {
             green: .random(in: 0...1),
             blue: .random(in: 0...1)
         )
+    }
+}
+class DebugDataSource {
+    static let shared = DebugDataSource()
+    
+    struct ImageDataSample { //MARK: Image ✅
+        private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
+        private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
+        private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
+        private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
+        var randomURL: URL {
+            let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)")!
+            print(url.absoluteString)
+            return url
+        }
+        var imageURL200x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+        var imageURL400x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+        var imageURL200x400: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+        var asyncImageDebug : some View {
+            AsyncImage(url: randomURL) { image in
+                image.resizable()
+            } placeholder: {
+                ProgressView()
+            }
+        }
+    }
+
+     struct StringDataSample { //MARK: string ✅
+        private let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
+         func random(_ length: Int = 30) -> String {
+            let randomCount: Int = (1...length).randomElement() ?? 1
+            return String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})
+        }
+
+         func randomOptional(_ length: Int = 30) -> String {
+            let randomCount: Int = (1...length).randomElement() ?? 1
+             let listValue:[String?] = [nil , String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})]
+             return (listValue.randomElement() ?? "test") ?? "test"
+        }
+    }
+
+    struct BoolDataSample {
+        private let listRandom: [Bool] = [true, false]
+        private let listRandomOptional: [Bool?] = [nil,true, false]
+        func random() -> Bool {  listRandom.randomElement() ?? false }
+        func randomOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
     }
 }
 
@@ -640,58 +597,5 @@ extension View {
     func previewResizable() -> some View {
         modifier(PreviewResizableViewModifier())
             .previewIpad()
-    }
-}
-class ScreenSize: ObservableObject {
-    static let shared = ScreenSize()
-    @Published var isDragging: Bool = false
-    @Published var isPortrait: Bool = true
-    @Published var isFitting: Bool = false
-    @Published var viewSize: CGSize = UIScreen.main.bounds.size
-
-    func updateSize(_ size: CGSize) {
-        viewSize = size
-    }
-}
-struct RandomColor: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(
-                Color.random
-            )
-    }
-}
-
-
-class DebugImage {
-    static let shared = DebugImage()
-    private let randomeSize: [Int] = [10,20,40,50,100,150,170,220,320,440,470,550,650,620,410,390,512,668,765,984,784,832,934,1200]
-    private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
-    private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
-    private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
-    var randomURL: URL {
-        let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)") ?? URL(string: "https://picsum.photos/id/125/220/300")!
-        print(url.absoluteString)
-        return url
-    }
-    var imageURL200x200: URL {
-        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
-    }
-    var imageURL400x200: URL {
-        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
-    }
-    var imageURL200x400: URL {
-        URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")!
-    }
-    var asyncImageDebug : some View {
-        AsyncImage(url: randomURL) { image in
-            image.resizable()
-        } placeholder: {
-            ProgressView()
-        }
-        .overlay (alignment: .bottomLeading){
-//            Text("url: \(randomURL)")
-//                .offset(y: 20)
-        }
     }
 }
