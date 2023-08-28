@@ -542,7 +542,6 @@ extension Color {
 }
 class DebugDataSource {
     static let shared = DebugDataSource()
-    
     struct ImageDataSample { //MARK: Image ✅
         private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
         private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
@@ -564,18 +563,17 @@ class DebugDataSource {
             }
         }
     }
-
-     struct StringDataSample { //MARK: string ✅
+    struct StringDataSample { //MARK: string ✅
         private let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
-         func random(_ length: Int = 30) -> String {
+        func random(_ length: Int = 30) -> String {
             let randomCount: Int = (1...length).randomElement() ?? 1
             return String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})
         }
 
-         func randomOptional(_ length: Int = 30) -> String {
+        func randomOptional(_ length: Int = 30) -> String {
             let randomCount: Int = (1...length).randomElement() ?? 1
-             let listValue:[String?] = [nil , String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})]
-             return (listValue.randomElement() ?? "test") ?? "test"
+            let listValue:[String?] = [nil , String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")})]
+            return (listValue.randomElement() ?? "test") ?? "test"
         }
     }
 
