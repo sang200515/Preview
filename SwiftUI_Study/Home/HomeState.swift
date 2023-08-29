@@ -7,11 +7,3 @@
 
 import Foundation
 import SwiftUI
-
-class HomeState: ObservableObject{
-    @StateObject private var sizeObserver = ScreenSize.shared
-    @Published var screenSize: CGSize = .zero
-    init(screenSize: CGSize) {
-        self.screenSize = sizeObserver.viewSize
-    }
-}

@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct ContentView2: View {
-    @StateObject private var sizeObserver = ScreenSize.shared
+    @StateObject private var sizeObserver = DebugDataSource.shared
 
     let data: [String] = ["Hi", "Hello", "Hey everyone"]
     let myString: String = "Hello"
@@ -36,7 +36,7 @@ struct ContentView2_Previews: PreviewProvider {
 
 
 struct Home: View {
-    @StateObject private var sizeObserver = ScreenSize.shared
+    @StateObject private var sizeObserver = DebugDataSource.shared
 
     var body: some View {
         VStack(spacing: 0) {

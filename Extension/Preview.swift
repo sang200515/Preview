@@ -112,7 +112,6 @@ extension View {
         ], orientations: [InterfaceOrientation] = [ .portrait, .landscapeLeft]
     ) -> some View {
         ForEach(devices, id: \.self) { device in
-
             ForEach(0..<2, id: \.self) { index2 in
                 if idiom == .phone && index2 == 1 {
                     previewDevice(device: device)
@@ -150,7 +149,7 @@ fileprivate struct SizePreferenceKey: PreferenceKey {
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
 }
 struct PreviewResizableViewModifier: ViewModifier {
-    @StateObject private var sizeObserver = ScreenSize.shared
+    @StateObject private var sizeObserver = DebugDataSource.shared
     @State private var size = CGSize(width: 390, height: 844)
     @State private var contentSize: CGSize = .zero
     @State private var isRunning = false
@@ -340,11 +339,26 @@ struct PreviewResizableViewModifier: ViewModifier {
                     .controlSize(.large)
             }
         }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                sizeObserver.updateSize(CGSize(width: sizeObserver.isPortrait ? 390 : 844, height: sizeObserver.isPortrait ? 844 : 390))
+            }
+
+        }
     }
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
             if isRunning {toolBarButtons(content: content)} else {content}
         }
+        .overlay(alignment: .topLeading, content: {
+            Group {
+                Text(sizeObserver.isPadUI ?  "iPad" : "iPhone")
+                    .padding(.horizontal, 10)
+                    .background(sizeObserver.isPadUI ? .red :.green )
+                    .clipShape(Capsule())
+                    .offset(y: -25)
+            }
+        })
         .padding()
         .task {
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { isRunning = true }
@@ -424,7 +438,7 @@ struct PreviewResizableViewModifier: ViewModifier {
             Image(systemName: "arrow.up.backward.and.arrow.down.forward")
                 .frame(width: handleSize, height: handleSize)
                 .dynamicTypeSize(.large)
-                .background(sizeObserver.isDragging ? Color.green : Color.red.opacity(0.2))
+                .background(sizeObserver.isDragging ? Color.green : Color.red.opacity(0.3))
                 .frame(width: handleSize, height: handleSize)
                 .cornerRadius(5)
                 .gesture(DragGesture(minimumDistance: 0.0)
@@ -482,7 +496,7 @@ fileprivate extension HorizontalAlignment {
 }
 
 struct DebugOverlayModifier: ViewModifier {
-    @StateObject private var sizeObserver = ScreenSize.shared
+    @StateObject private var sizeObserver = DebugDataSource.shared
     @State private var contentSize: CGSize = .zero
     func body(content: Content) -> some View {
         content
@@ -497,9 +511,9 @@ struct DebugOverlayModifier: ViewModifier {
             .overlay(content: {
                 if sizeObserver.isDragging {
                     HStack(spacing: 0){
-                        Text("w: \(Int(contentSize.width)),")
+                        Text("w:\(Int(contentSize.width)),")
                             .background(contentSize.width == sizeObserver.viewSize.width ? Color.green.opacity(0.7) : Color.black.opacity(0.4))
-                        Text(" h:\(Int(contentSize.height))")
+                        Text("h:\(Int(contentSize.height))")
                             .background(contentSize.height == sizeObserver.viewSize.height ? Color.green.opacity(0.7) : Color.black.opacity(0.4))
                     }
                     .padding(4)
@@ -516,15 +530,6 @@ struct DebugOverlayModifier: ViewModifier {
     }
 }
 
-class ScreenSize: ObservableObject {
-    static let shared = ScreenSize()
-    @Published var isDragging: Bool = false
-    @Published var isPortrait: Bool = true
-    @Published var isFitting: Bool = false
-    @Published var viewSize: CGSize = UIScreen.main.bounds.size
-
-    func updateSize(_ size: CGSize) { viewSize = size }
-}
 struct RandomColor: ViewModifier {
     func body(content: Content) -> some View {
         content.background(Color.random)
@@ -541,47 +546,7 @@ extension Color {
     }
 }
 
-struct ImageDataSample { //MARK: Image ✅
-    private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
-    private let randomImageID: String = "\((1...1000).randomElement() ?? 1)"
-    private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
-    private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
-    var randomURL: URL {
-        let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)")!
-        print(url.absoluteString)
-        return url
-    }
-    var imageURL200x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-    var imageURL400x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-    var imageURL200x400: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
-    var imageTest : some View {
-        AsyncImage(url: randomURL) { image in
-            image.resizable()
-        } placeholder: {
-            ProgressView()
-        }
-    }
-}
 
-extension Bool { //MARK: Bool ✅
-    static let listRandom: [Bool] = [true, false]
-    static let listRandomOptional: [Bool?] = [nil,true, false]
-    static func randomBool() -> Bool {  listRandom.randomElement() ?? false }
-    static func randomBoolOptional() -> Bool? {  listRandomOptional.randomElement() ?? nil }
-}
-extension String {//MARK: String ✅
-    static let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
-    static func randomString(_ length: Int = 20) -> String {
-        let randomCount: Int = (1...length).randomElement() ?? 1
-        return String(String((0..<randomCount).map { _ in String.paragraph.randomElement() ?? String.Element("test")}))
-    }
-
-    static  func randomStringOptional(_ length: Int = 20) -> String? {
-        let randomCount: Int = (1...length).randomElement() ?? 1
-        let listValue:[String?] = [nil, String((0..<randomCount).map { _ in String.paragraph.randomElement() ?? String.Element("sai logic roi")})]
-        return listValue.randomElement() ?? nil
-    }
-}
 extension View {
     func debugOverlay() -> some View {
         self.modifier(DebugOverlayModifier())
@@ -593,4 +558,55 @@ extension View {
         modifier(PreviewResizableViewModifier())
             .previewIpad()
     }
+}
+class DebugDataSource: ObservableObject {
+    static let shared = DebugDataSource()
+    @Published var isDragging: Bool = false
+    @Published var isPortrait: Bool = true
+    @Published var isFitting: Bool = false
+    @Published var viewSize: CGSize = UIScreen.main.bounds.size
+    @Published var isPadUI: Bool = false
+    func updateSize(_ size: CGSize) {
+        viewSize = size
+        isPadUI = viewSize.width > 435 || viewSize.height > 937
+    }
+
+    //MARK: Image ✅
+    private let randomeSize: [Int] = [20,50,100,150,200,300,400,500,650,800,1000,1200,1200]
+    private var randomImageID: String { "\((1...1000).randomElement() ?? 1)"}
+    private var randomOneImageID: String { "\((1...1000).randomElement() ?? 1)"}
+    private var randomWidth: String { "\(randomeSize.randomElement() ?? 1)" }
+    private var randomHeight: String { "\(randomeSize.randomElement() ?? 1)" }
+    var randomURL: URL {
+        let url: URL = URL(string: "https://picsum.photos/id/\(randomImageID)/\(randomWidth)/\(randomHeight)")!
+        print(url.absoluteString)
+        return url
+    }
+    var randomOneURL: URL {
+        let url: URL = URL(string: "https://picsum.photos/id/\(randomOneImageID)/\(randomWidth)/\(randomHeight)")!
+        print(url.absoluteString)
+        return url
+    }
+//    var imageURL200x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+//    var imageURL400x200: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+//    var imageURL200x400: URL { URL(string: "https://picsum.photos/id/\(randomImageID)/200/200")! }
+
+    //MARK: String ✅
+     private let paragraph = "これは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文にこれは例文です。この例文をテスト用に、より意味のある別の文に"
+    func randomString(_ length: Int) -> String {
+        let randomCount: Int = (0...length).randomElement() ?? 1
+        return String(String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("test")}))
+    }
+
+    func randomStringOptional(_ length: Int) -> String? {
+        let randomCount: Int = (0...length).randomElement() ?? 1
+        let listValue:[String?] = [nil,nil,nil, String((0..<randomCount).map { _ in paragraph.randomElement() ?? String.Element("sai logic roi")})]
+        return listValue.randomElement() ?? nil
+    }
+    //MARK: Bool ✅
+       private let listRandom: [Bool] = [true, false]
+       private let listRandomOptional: [Bool?] = [nil,true, false]
+    var randomBool : Bool {  listRandom.randomElement() ?? false }
+    var randomBoolOptional : Bool? {  listRandomOptional.randomElement() ?? nil }
+
 }
